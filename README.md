@@ -1,4 +1,6 @@
 # Osu-replacer
-simple console tool that allows you to delete or replace the background of every osu map you have.
-most backgrounds use jpg files, make sure you have a jpg first to cover most of the maps you have.
-IF YOU RUN DEL ITS OVER, THE PROGRAM DOESNT CHECK THE BEATMAP FILES DIRECTLY, SO IF YOU WANT TO REPLACE MAKE SURE TO USE REP.
+simple console tool that allows you to delete the background of every osu map you have.
+it can also replace the background of your osu maps in batch, but said feature should be used carefully, and is not yet on the state i would like it to be
+currently replacing backgrounds only works if A:you have an image in the same format as most of your maps and B: you are okay with deleting any background that isnt replaceable
+Once deleted, the tool has no way of fixing your backgrounds, this may be fixed on a future update, for now make sure to actually use rep instead of del if you plan to replace
+Otherwise just enjoy not having to worry about someone seeing your osu backgrounds in public <:)
