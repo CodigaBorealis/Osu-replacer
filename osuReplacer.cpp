@@ -70,20 +70,6 @@ void replaceBackgrounds(fs::path osupath){
 
 }
 
-int setOption(std::string input){
-    int option;
-        try {
-        option = std::stoi(input); 
-    } catch (const std::invalid_argument& e) {
-        printInfoMessage("Only numbers please\n");
-        return -1;
-    } catch (const std::out_of_range& e) {
-        printInfoMessage("There are only two options silly.\n");
-        return -1;
-    }
-    return option;
-}
-
 int main(){
     fs::path osuPath=getOsuPath();
 
@@ -98,7 +84,7 @@ int main(){
         
     printInfoMessage("Input 1 to delete all backgrounds, input 2 to replace them \n");
     std::getline(std::cin,input);
-    option=setOption(input);
+    option=validateOption(input);
     }
         option==1? deleteBackrounds(osuPath):replaceBackgrounds(osuPath);
     
