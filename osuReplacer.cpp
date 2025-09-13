@@ -3,19 +3,9 @@
 #include <string>
 #include <typeinfo>
 #include <algorithm> 
-#include <cctype>   
-
+#include <cctype>
+#include "osuReplacerUtilities.h"
 namespace fs = std::filesystem;
-
-void printInfoMessage(std::string message){
-    std::cout<<message;
-    }
-
-std::string toUpperCase(std::string stringToConvert){
-    std::transform(stringToConvert.begin(), stringToConvert.end(), stringToConvert.begin(),[](unsigned char c) { return std::toupper(c); });
-    return stringToConvert;
-    }
-
 fs::path getOsuPath(){
     //get the path where osu! is installed, if it isnt installed returns an empty PATH;returns the osu PATH otherwise
     const char* user=std::getenv("USERPROFILE");
@@ -32,12 +22,6 @@ fs::path getOsuPath(){
     }
     return path;
 }
-
-bool validExtension(std::string filePathString){
-    filePathString=toUpperCase(filePathString);
-    return filePathString==".PNG" || filePathString==".JPG" || filePathString==".JPEG";
-}
-
 bool validReplacementPath(fs::path replacementPath){
     if(!fs::exists(replacementPath)){
         printInfoMessage("The specified file does not exist");
@@ -83,7 +67,7 @@ void replaceBackgrounds(fs::path osupath){
     if(!validReplacementPath(replacementPath)){
         return;
     }
-    
+
 }
 
 int setOption(std::string input){
