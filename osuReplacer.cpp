@@ -1,94 +1,72 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
-#include <typeinfo>
-#include <algorithm> 
-#include <cctype>
 #include "osuReplacerUtilities.h"
 namespace fs = std::filesystem;
-fs::path getOsuPath(){
-    //get the path where osu! is installed, if it isnt installed returns an empty PATH;returns the osu PATH otherwise
-    const char* user=std::getenv("USERPROFILE");
-    if(nullptr==user){
-        printInfoMessage("Couldnt find the user path \n");
-        return fs::path{};
+void renameAndAppend(fs::path replacementPath, fs::path backgroundPath)
+{
+    try
+    {
+        fs::path beatmapFolder = backgroundPath.parent_path() / backgroundPath;
+        fs::copy_file(replacementPath, beatmapFolder, fs::copy_options::overwrite_existing);
+        printInfoMessage(backgroundPath.string() + " has been replaced with " + replacementPath.string());
     }
-
-    fs::path path=fs::path(user)/"AppData"/"Local"/"osu!"/"Songs";
-
-    if(!fs::exists(path)){
-        printInfoMessage("Couldnt find the osu! folder \n");
-        return fs::path{};
+    catch (fs::filesystem_error &e)
+    {
+        printInfoMessage("An error has ocurred while trying to copy your file");
     }
-    return path;
 }
-bool validReplacementPath(fs::path replacementPath){
-    if(!fs::exists(replacementPath)){
-        printInfoMessage("The specified file does not exist");
-        return false;
-    }
-    if(!validExtension(replacementPath.extension().string())){
-        printInfoMessage("The specified file's extension is not valid");
-        return false;
-    }
-    return true;
-    }
-//Loops trough all the beatmap folders and deletes the image files
-void deleteBackrounds(fs::path osuPath){
-    for(const auto& osuFolder: fs::directory_iterator(osuPath)){
-        if(!fs::is_directory(osuFolder)){
-            continue;
-        }
- 
-        fs::path mapFolder=osuFolder.path();
-        for(const auto& songFolder: fs::directory_iterator(mapFolder)){
-            if(!fs::is_regular_file(songFolder)){
-                continue;
-            }
-            fs::path currentFilePath=songFolder.path();
+// Loops trough all the beatmap folders and deletes the image files
+void deleteBackgrounds(fs::path osuPath)
+{
+    forAllBackrounds(osuPath, [](const fs::path &currentFile)
+                     {
+        fs::remove(currentFile);
+        printInfoMessage("Background from: "+currentFile.string() + " has been deleted"); });
+}
 
-            std::string currentFileExtension=currentFilePath.extension().string();
-            if(!validExtension(currentFileExtension)){
-                continue;
-            }  
-            fs::remove(currentFilePath);
-            printInfoMessage(currentFilePath.string()+" has been deleted \n");
-                                                }
-
-        printInfoMessage("Checking: "+mapFolder.string()+"\n");
-                                            }
-                                        }
-
-void replaceBackgrounds(fs::path osupath){
-    printInfoMessage("Input the path of the replacement image");
+void replaceBackgrounds(fs::path osuPath)
+{
+    printInfoMessage("Input the path of the replacement image, this will replace the background of every map that shares format with the given image");
     std::string replacementPathString;
-    std::getline(std::cin>>std::ws,replacementPathString);
-    fs::path replacementPath=fs::path(replacementPathString);
-    if(!validReplacementPath(replacementPath)){
-        return;
-    }
+    std::getline(std::cin >> std::ws, replacementPathString);
+    fs::path replacementPath = fs::path(replacementPathString);
+    std::string replacementExtension = replacementPath.extension().string();
 
+    if (!validReplacementPath(replacementPath))
+    {
+        replaceBackgrounds(osuPath);
+    }
+    forAllBackrounds(osuPath, [&](const fs::path &currentFile)
+                     {
+                         if (!compatibleExtension(replacementExtension, currentFile.extension().string()))
+                         {
+                             printInfoMessage(currentFile.string() + " could not be replaced because the file extension does not match");
+                             return;
+                         }
+                         renameAndAppend(replacementPath, currentFile); });
 }
 
-int main(){
-    fs::path osuPath=getOsuPath();
+int main()
+{
+    const fs::path osuPath = getOsuPath();
 
-    if(osuPath==fs::path{}){
-        printInfoMessage("Cant continue without a valid osu PATH \n");
+    if (osuPath == fs::path{})
+    {
+        printInfoMessage("Cant continue without a valid osu PATH");
         return 0;
     }
-
-    int option=-1;
-    std::string input;
-    while(option<1 || option>2){
-        
-    printInfoMessage("Input 1 to delete all backgrounds, input 2 to replace them \n");
-    std::getline(std::cin,input);
-    option=validateOption(input);
+    int option = handleInput();
+    if (option == 1)
+    {
+        deleteBackgrounds(osuPath);
     }
-        option==1? deleteBackrounds(osuPath):replaceBackgrounds(osuPath);
-    
+    else
+    {
+        replaceBackgrounds(osuPath);
+    }
+    printInfoMessage("Press Enter to exit");
+    std::cin.get();
 
     return 0;
 }
-
