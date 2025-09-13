@@ -49,6 +49,7 @@ bool validReplacementPath(fs::path replacementPath){
     }
     return true;
     }
+//Loops trough all the beatmap folders and deletes the image files
 void deleteBackrounds(fs::path osuPath){
     for(const auto& osuFolder: fs::directory_iterator(osuPath)){
         if(!fs::is_directory(osuFolder)){
@@ -56,32 +57,35 @@ void deleteBackrounds(fs::path osuPath){
         }
  
         fs::path mapFolder=osuFolder.path();
-        for(const auto& songFolder: fs::directory_iterator(mapFolder)){//loops trough every folder in songs
-            if(!fs::is_regular_file(songFolder)){//ignores anything that is not a regular file
+        for(const auto& songFolder: fs::directory_iterator(mapFolder)){
+            if(!fs::is_regular_file(songFolder)){
                 continue;
             }
-            fs::path currentFilePath=songFolder.path();//stores the current file its checking
-            std::string currentFileExtension=currentFilePath.extension().string();//obtains the extension of the current file its checking
+            fs::path currentFilePath=songFolder.path();
+
+            std::string currentFileExtension=currentFilePath.extension().string();
             if(!validExtension(currentFileExtension)){
                 continue;
             }  
             fs::remove(currentFilePath);
-            printInfoMessage("background from "+currentFilePath.string()+" has been deleted \n");
+            printInfoMessage(currentFilePath.string()+" has been deleted \n");
                                                 }
+
+        printInfoMessage("Checking: "+mapFolder.string()+"\n");
                                             }
                                         }
 
-
 void replaceBackgrounds(fs::path osupath){
-
     printInfoMessage("Input the path of the replacement image");
     std::string replacementPathString;
     std::getline(std::cin>>std::ws,replacementPathString);
     fs::path replacementPath=fs::path(replacementPathString);
-    if(validReplacementPath(replacementPath)){
+    if(!validReplacementPath(replacementPath)){
         return;
     }
+    
 }
+
 int setOption(std::string input){
     int option;
         try {
