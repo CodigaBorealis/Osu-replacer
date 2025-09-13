@@ -1,4 +1,4 @@
-# osu-replacer
+# osu! replacer
 
 A simple console tool that allows you to **delete** the background of every osu! map you have, or **replace** them with another image of the same format.
 
