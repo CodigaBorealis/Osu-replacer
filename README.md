@@ -8,6 +8,13 @@ A simple console tool that allows you to **delete** the background of every osu!
 - Saves you from judgmental stares from non-osu players.
 
 ---
+### How to use
+- I recommend closing osu before using the program to avoid issues
+- Select to either use the default location of the osu songs folder or give the path yourself
+- If you pass the path yourself be 100% sure its the songs folder inside the osu installation
+- Select which mode you want to use
+- If you use replace then select to either preserve the backgrounds that arent compatible with your replacement or not
+- Once the program is done it will automatically close, then you can open your game
 
 Enjoy avoiding weird looks when playing in public <:)
 
