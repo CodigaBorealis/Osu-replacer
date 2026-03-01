@@ -11,4 +11,4 @@ A simple console tool that allows you to **delete** the background of every osu!
 
 Enjoy avoiding weird looks when playing in public <:)
 
-WARNING: deletion is non-reversible, if you want to replace the backgrounds be sure to selecte "replace", once the backgrounds are deleted you CANNOT use the replace function
+WARNING: deletion is non-reversible, if you want to replace the backgrounds be sure to select "replace", once the backgrounds are deleted you CANNOT use the replace function
